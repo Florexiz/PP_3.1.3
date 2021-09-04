@@ -13,5 +13,7 @@ public interface UserService extends UserDetailsService {
 
     void saveUser(User user);
 
+    void saveUser(User user, String[] roles);
+
     void deleteUser(Long id);
 }

@@ -18,31 +18,6 @@ public class UserController {
     public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        /*Set<Role> roles;
-        for (int i = 1; i <= 20; i++) {
-            roles = new HashSet<>();
-            roles.add(roleService.getOrCreateRole("ROLE_USER"));
-            userService.saveUser(new User(
-                    "FirstName" + i,
-                    "LastName" + i,
-                    (byte) (20 + i),
-                    "email" + i + "@mail.com",
-                    "PASSWORD" + i,
-                    roles
-            ));
-        }
-        roles = new HashSet<>();
-        roles.add(roleService.getOrCreateRole("ROLE_USER"));
-        roles.add(roleService.getOrCreateRole("ROLE_ADMIN"));
-        User admin = new User(
-                "AFirstName",
-                "ALastName",
-                (byte) 100,
-                "admin@mail.com",
-                "ADMIN",
-                roles
-        );
-        userService.saveUser(admin);*/
     }
 
     @GetMapping("/")
@@ -64,13 +39,15 @@ public class UserController {
 
     @GetMapping("/admin/new")
     public String addUser(Model model) {
+        model.addAttribute("roles", roleService.getRoles());
         model.addAttribute("user", new User());
         return "addUser";
     }
 
     @PostMapping("/admin/")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
+    public String saveUser(@ModelAttribute("user") User user,
+                           @RequestParam(value = "selectedRoles") String[] roles) {
+        userService.saveUser(user, roles);
         return "redirect:/admin";
     }
 
@@ -82,13 +59,15 @@ public class UserController {
 
     @GetMapping("/admin/edit/{id}")
     public String editUser(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("roles", roleService.getRoles());
         model.addAttribute("user", userService.getUser(id));
         return "editUser";
     }
 
-    @PatchMapping("/admin/")
-    public String patchUser(@ModelAttribute User user) {
-        userService.saveUser(user);
+    @PutMapping("/admin/")
+    public String patchUser(@ModelAttribute User user,
+                            @RequestParam(value = "selectedRoles") String[] roles) {
+        userService.saveUser(user, roles);
         return "redirect:/admin";
     }
 }

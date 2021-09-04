@@ -4,6 +4,9 @@ import com.falsecolor.boot.model.Role;
 import com.falsecolor.boot.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -21,5 +24,10 @@ public class RoleServiceImpl implements RoleService {
             roleRepository.save(role);
         }
         return role;
+    }
+
+    @Override
+    public Set<Role> getRoles() {
+        return new HashSet<>(roleRepository.findAll());
     }
 }

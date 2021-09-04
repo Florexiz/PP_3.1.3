@@ -5,7 +5,7 @@
     <title>User list</title>
     <style>
         table, th, td {border: 1px solid black}
-        th, td {width: 20%}
+        th, td {width: 17%}
         table {width: 100%}
     </style>
 </head>
@@ -17,26 +17,26 @@
             <th>Last Name</th>
             <th>Age</th>
             <th>Username</th>
+            <th>Roles</th>
         </tr>
-        <th:block th:each="user : ${users}">
-            <tr>
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.firstName}"></td>
-                <td th:text="${user.lastName}"></td>
-                <td th:text="${user.age}"></td>
-                <td th:text="${user.username}"></td>
-                <td style="width: min-content">
-                    <form th:method="GET" th:action="@{/admin/edit/{id}(id=${user.id})}">
-                        <input type="submit" value="Edit">
-                    </form>
-                </td>
-                <td style="width: min-content">
-                    <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.id})}">
-                        <input type="submit" value="Delete">
-                    </form>
-                </td>
-            </tr>
-        </th:block>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.age}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.roles}"></td>
+            <td style="width: min-content">
+                <form th:method="GET" th:action="@{/admin/edit/{id}(id=${user.id})}">
+                    <input type="submit" value="Edit">
+                </form>
+            </td>
+            <td style="width: min-content">
+                <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.id})}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
     </table>
     <div style="text-align: center; margin: 16px">
         <a href="/admin/new">Add new user...</a>

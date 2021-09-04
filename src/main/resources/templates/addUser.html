@@ -21,6 +21,11 @@
         <label for="password">Password</label><br>
         <input type="password" id="password" th:field="*{password}"><br><br>
 
+        <label for="roles">Roles</label><br>
+        <select name="selectedRoles" id="roles" multiple>
+            <option th:each="role : ${roles}" th:text="${role.name}" th:value="${role.name}"></option>
+        </select><br><br>
+
         <input type="submit" value="Add">
     </form>
     <div style="text-align: end; margin: 16px">
