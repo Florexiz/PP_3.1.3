@@ -1,28 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>User</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/5.1/examples/navbars/navbar.css">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/5.1/examples/sidebars/sidebars.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <title>User page</title>
 </head>
-<body>
-    <div th:object="${user}" style="text-align: center">
-
-        <label for="firstName">First Name</label><br>
-        <input type="text" id="firstName" th:field="*{firstName}" readonly><br><br>
-
-        <label for="lastName">Last Name</label><br>
-        <input type="text" id="lastName" th:field="*{lastName}" readonly><br><br>
-
-        <label for="age">Age</label><br>
-        <input type="text" id="age" th:field="*{age}" readonly><br><br>
-
-        <label for="username">Username</label><br>
-        <input type="email" id="username" th:field="*{username}" readonly><br><br>
-
+<body class="d-flex flex-column" style="padding-bottom: 0">
+<div class="navbar navbar-dark bg-dark mb-0">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:utext="'<b>' + ${#authentication.getPrincipal().getUsername()} + '</b> with roles: ' + ${#authentication.getPrincipal().getRolesAsString()}">Current user</a>
+        <a class="navbar-text text-decoration-none" href="/logout">Logout</a>
     </div>
-
-    <div style="text-align: end; margin: 16px">
-        <a href="/logout">Logout</a>
+</div>
+<div class="d-flex flex-fill">
+    <div class="d-flex flex-column pt-3" style="width: 200px">
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li th:if="${user.hasRole('ROLE_ADMIN')}" class="nav-item">
+                <a class="nav-link" href="/admin">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/user">User</a>
+            </li>
+        </ul>
     </div>
+    <main class="d-flex flex-column bg-light flex-fill">
+        <h1 class="mt-4 ms-4">User information-page</h1>
+        <div class="ms-4 me-4" style="border: 1px solid #DCDFE3">
+            <div class="ps-3 pt-2 pb-1">
+                <h5>About user</h5>
+            </div>
+            <div class="p-3 overflow-auto" style="border-top: 1px solid #DCDFE3; background: white; max-height: 75vh">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.age}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.getRolesAsString()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 </body>
 </html>

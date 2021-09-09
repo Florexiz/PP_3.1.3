@@ -46,8 +46,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user, String[] roles) {
         user.setRoles(new HashSet<>());
-        for (String role : roles) {
-            user.addRole(roleService.getOrCreateRole(role));
+        if (roles != null) {
+            for (String role : roles) {
+                user.addRole(roleService.getOrCreateRole(role));
+            }
         }
         saveUser(user);
     }

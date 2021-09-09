@@ -23,7 +23,7 @@ public class DBFill {
 
     @PostConstruct
     public void generateUsers() {
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 5; i++) {
             userService.saveUser(new User(
                     "FirstName" + i,
                     "LastName" + i,

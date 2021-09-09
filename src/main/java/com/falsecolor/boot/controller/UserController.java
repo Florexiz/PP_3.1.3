@@ -25,6 +25,11 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/user")
     public String userPage(Principal principal, Model model) {
         model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
@@ -33,15 +38,9 @@ public class UserController {
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
+        model.addAttribute("roles", roleService.getRoles());
         model.addAttribute("users", userService.getUsers());
         return "admin";
-    }
-
-    @GetMapping("/admin/new")
-    public String addUser(Model model) {
-        model.addAttribute("roles", roleService.getRoles());
-        model.addAttribute("user", new User());
-        return "addUser";
     }
 
     @PostMapping("/admin/")
@@ -57,16 +56,9 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/edit/{id}")
-    public String editUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("roles", roleService.getRoles());
-        model.addAttribute("user", userService.getUser(id));
-        return "editUser";
-    }
-
     @PutMapping("/admin/")
     public String patchUser(@ModelAttribute User user,
-                            @RequestParam(value = "selectedRoles") String[] roles) {
+                            @RequestParam(value = "selectedRoles", required = false) String[] roles) {
         userService.saveUser(user, roles);
         return "redirect:/admin";
     }

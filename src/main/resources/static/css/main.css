@@ -1,0 +1,10 @@
+.html, body {
+    height: 100%;
+}
+
+.nav-pills .selected {
+    background: white;;
+    border: 1px solid #DCDFE3;
+    border-bottom: 0;
+    color: #495057
+}
