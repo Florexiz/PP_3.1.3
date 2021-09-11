@@ -34,24 +34,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         if (user.getPassword().equals("")) {
             user.setPassword(getUser(user.getId()).getPassword());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
-    public void saveUser(User user, String[] roles) {
+    public User saveUser(User user, String[] roles) {
         user.setRoles(new HashSet<>());
         if (roles != null) {
             for (String role : roles) {
-                user.addRole(roleService.getOrCreateRole(role));
+                user.addRole(roleService.getOrCreateRole("ROLE_" + role));
             }
         }
-        saveUser(user);
+        return saveUser(user);
     }
 
     @Override
@@ -60,7 +60,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User getUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return getUserByUsername(username);
     }
 }

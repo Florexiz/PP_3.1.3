@@ -11,9 +11,11 @@ public interface UserService extends UserDetailsService {
 
     List<User> getUsers();
 
-    void saveUser(User user);
+    User getUserByUsername(String username);
 
-    void saveUser(User user, String[] roles);
+    User saveUser(User user);
+
+    User saveUser(User user, String[] roles);
 
     void deleteUser(Long id);
 }

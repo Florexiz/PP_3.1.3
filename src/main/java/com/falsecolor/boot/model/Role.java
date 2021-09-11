@@ -1,5 +1,7 @@
 package com.falsecolor.boot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -30,6 +32,7 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
+    @JsonIgnore
     public String getName() {
         return name;
     }
@@ -38,11 +41,13 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
+    @JsonIgnore
     @Override
     public String getAuthority() {
         return getName();
     }
 
+    @JsonProperty("name")
     @Override
     public String toString() {
         return name.substring(5);

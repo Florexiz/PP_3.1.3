@@ -1,13 +1,9 @@
 package com.falsecolor.boot.controller;
 
-import com.falsecolor.boot.model.User;
 import com.falsecolor.boot.service.RoleService;
 import com.falsecolor.boot.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class UserController {
@@ -30,36 +26,13 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/user")
-    public String userPage(Principal principal, Model model) {
-        model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
-        return "userPage";
-    }
-
     @GetMapping("/admin")
-    public String adminPage(Model model) {
-        model.addAttribute("roles", roleService.getRoles());
-        model.addAttribute("users", userService.getUsers());
+    public String adminPage() {
         return "admin";
     }
 
-    @PostMapping("/admin/")
-    public String saveUser(@ModelAttribute("user") User user,
-                           @RequestParam(value = "selectedRoles") String[] roles) {
-        userService.saveUser(user, roles);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/admin/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-        return "redirect:/admin";
-    }
-
-    @PutMapping("/admin/")
-    public String patchUser(@ModelAttribute User user,
-                            @RequestParam(value = "selectedRoles", required = false) String[] roles) {
-        userService.saveUser(user, roles);
-        return "redirect:/admin";
+    @GetMapping("/user")
+    public String userPage() {
+        return "userPage";
     }
 }
