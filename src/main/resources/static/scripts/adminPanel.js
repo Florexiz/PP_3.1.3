@@ -1,13 +1,7 @@
 var users, roles;
 
 function searchUser(id) {
-    var found;
-    users.forEach(user => {
-        if (user.id == id) {
-            found = user;
-        }
-    });
-    return found;
+    return users.find(user => user.id == id);
 }
 
 function editModal(id) {
@@ -34,8 +28,14 @@ function editSubmit() {
         type: form.attr("method"),
         url: form.attr("action"),
         data: form.serialize(),
-        success: function () {
-            pullPage();
+        success: function (response) {
+            users = users.map(user => {
+                if (user.id == $("#editID").val()) {
+                    user = response;
+                }
+                return user;
+            });
+            updateTable();
         }
     })
 }
@@ -64,7 +64,8 @@ function deleteSubmit() {
         url: form.attr("action") + $("#deleteID").val(),
         data: form.serialize(),
         success: function () {
-            pullPage();
+            users = users.filter(user => user.id != $("#deleteID").val());
+            updateTable();
         }
     })
 }
@@ -75,42 +76,47 @@ function addSubmit() {
         type: form.attr("method"),
         url: form.attr("action"),
         data: form.serialize(),
-        success: function () {
+        success: function (response) {
             $("#all-tab").trigger("click");
             form.trigger("reset");
-            pullPage();
-
+            users.push(response);
+            updateTable();
         }
     })
 }
 
-function pullPage() {
+function updateTable() {
+    $("#addRoles").empty();
+    roles.forEach(role => {
+        $("#addRoles").append("<option value=" + role.name + ">" + role.name + "</option>");
+    });
+
+    $("#usersTable").empty();
+    users.forEach(user => {
+        $("#usersTable").append("<tr>" +
+            "<td>" + user.id + "</td>" +
+            "<td>" + user.firstName + "</td>" +
+            "<td>" + user.lastName + "</td>" +
+            "<td>" + user.age + "</td>" +
+            "<td>" + user.username + "</td>" +
+            "<td>" + user.rolesAsString + "</td>" +
+            "<td><button class='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalEdit' onclick='editModal(" + user.id + ")' style='color: white'>Edit</button></td>" +
+            "<td><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#modalDelete' onclick='deleteModal(" + user.id + ")' style='color: white'>Delete</button></td>" +
+            "</tr>");
+    });
+}
+
+function pullData() {
     fetch("/api/admin/roles/").then(response => {
         response.json().then(allRoles => {
             roles = allRoles;
-            $("#addRoles").empty();
-            roles.forEach(role => {
-                $("#addRoles").append("<option value=" + role.name + ">" + role.name + "</option>");
-            });
-        });
-    });
-    fetch("/api/admin/users/").then(response => {
-        response.json().then(allUsers => {
-            users = allUsers;
-            $("#usersTable").empty();
-            users.forEach(user => {
-                $("#usersTable").append("<tr>" +
-                    "<td>" + user.id + "</td>" +
-                    "<td>" + user.firstName + "</td>" +
-                    "<td>" + user.lastName + "</td>" +
-                    "<td>" + user.age + "</td>" +
-                    "<td>" + user.username + "</td>" +
-                    "<td>" + user.rolesAsString + "</td>" +
-                    "<td><button class='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalEdit' onclick='editModal(" + user.id + ")' style='color: white'>Edit</button></td>" +
-                    "<td><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#modalDelete' onclick='deleteModal(" + user.id + ")' style='color: white'>Delete</button></td>" +
-                    "</tr>");
+            fetch("/api/admin/users/").then(response => {
+                response.json().then(allUsers => {
+                    users = allUsers;
+                    updateTable();
+                });
             });
         });
     });
 }
-pullPage();
+pullData();
